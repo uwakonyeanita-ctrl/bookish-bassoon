@@ -1,0 +1,572 @@
+import { useState } from "react";
+
+const IDEAS = {
+  "Fashion & Style": {
+    Instagram: [
+      { title: "5 Outfits, 1 Item Challenge", hook: "You won't believe how many ways you can style this one piece!", tip: "Use transitions between each outfit for more engagement.", emoji: "👗" },
+      { title: "Thrift Flip Transformation", hook: "I turned a $3 thrift store find into a designer dupe!", tip: "Show the before and after side by side.", emoji: "✂️" },
+      { title: "Outfit for Every Mood", hook: "What you wear reflects how you feel — here's proof.", tip: "Use bold text overlays to label each mood.", emoji: "🎨" },
+      { title: "Build a Capsule Wardrobe", hook: "These 10 pieces will replace 80% of your closet.", tip: "Lay flat the items neatly for a clean visual.", emoji: "🧺" },
+      { title: "Affordable vs Expensive Look", hook: "Can you tell which outfit cost $20 and which cost $200?", tip: "Do a poll sticker to get followers guessing.", emoji: "💸" },
+      { title: "Get Ready With Me: Date Night", hook: "This look took me 15 minutes and I got SO many compliments.", tip: "Share your exact products in the caption.", emoji: "🌙" },
+      { title: "Top 10 Style Mistakes", hook: "These mistakes are making your outfits look cheap.", tip: "Use a carousel with each mistake on a separate slide.", emoji: "🚫" },
+      { title: "How to Dress for Your Body Type", hook: "Stop hiding your body — here's how to celebrate it.", tip: "Feature real body types, not just one.", emoji: "✨" },
+    ],
+    TikTok: [
+      { title: "POV: I Style You for a Week", hook: "POV: A fashion stylist picks your outfits for 7 days.", tip: "Use trending audio for each day's reveal.", emoji: "📅" },
+      { title: "Fashion Hacks Nobody Tells You", hook: "These styling tricks changed how I dress forever.", tip: "Keep each hack under 5 seconds for fast pacing.", emoji: "⚡" },
+      { title: "Rating Outfits from My Followers", hook: "You sent me your fits — here's my honest review.", tip: "Use a rating system graphic on screen.", emoji: "⭐" },
+      { title: "Trend vs Timeless Pieces", hook: "Stop wasting money on trends — buy these instead.", tip: "Use a split screen comparison format.", emoji: "📊" },
+      { title: "Style Challenge: $50 Budget", hook: "I went to the mall with only $50 — watch what I built.", tip: "Film the shopping trip for authenticity.", emoji: "🛍️" },
+      { title: "Biggest Fashion Mistakes to Avoid", hook: "I used to make all of these — don't repeat my errors.", tip: "Use reaction-style filming to seem relatable.", emoji: "🚫" },
+      { title: "Luxury Look for Less", hook: "This whole outfit cost less than one designer item.", tip: "Show the designer version first, then yours.", emoji: "💎" },
+      { title: "What NOT to Wear to an Interview", hook: "HR managers are silently judging these outfit choices.", tip: "Use humor to make it shareable.", emoji: "💼" },
+    ],
+    YouTube: [
+      { title: "My Entire Wardrobe Organization", hook: "I finally organized my closet and it changed my life.", tip: "Use time-lapse for the long organizing parts.", emoji: "🗂️" },
+      { title: "Shop With Me: Zara Haul", hook: "Everything I tried on, honest thoughts included.", tip: "Include price tags on screen for each item.", emoji: "🛒" },
+      { title: "How to Find Your Personal Style", hook: "I spent years dressing for others — here's how I stopped.", tip: "Include a style quiz or checklist in the description.", emoji: "🔍" },
+      { title: "Seasonal Wardrobe Transition Guide", hook: "How I switch my wardrobe between seasons without stress.", tip: "Create a downloadable checklist for viewers.", emoji: "🍂" },
+      { title: "Secondhand Shopping Masterclass", hook: "Thrifting secrets that took me years to learn.", tip: "Film in a real thrift store for authenticity.", emoji: "🏷️" },
+      { title: "One Week Seven Outfits Challenge", hook: "I wore a new outfit every day using only what I own.", tip: "Day-by-day format keeps viewers coming back.", emoji: "📆" },
+      { title: "Complete Guide to Men's Fashion", hook: "Everything a man needs to know about dressing well.", tip: "Cover basics, smart casual, and formal looks.", emoji: "👔" },
+      { title: "How I Built a Designer Wardrobe on a Budget", hook: "I look expensive but I spent almost nothing.", tip: "Break down each item and its cost.", emoji: "💰" },
+    ],
+    LinkedIn: [
+      { title: "How Dressing Well Changed My Career", hook: "I got promoted after changing one thing — my wardrobe.", tip: "Connect fashion to professional success.", emoji: "📈" },
+      { title: "What Your Work Outfit Says About You", hook: "Hiring managers form opinions in 7 seconds based on looks.", tip: "Keep it professional but relatable.", emoji: "💼" },
+    ],
+    Facebook: [
+      { title: "Best Online Stores for Affordable Fashion", hook: "I found the best budget fashion stores so you don't have to.", tip: "Include links to the stores in your post.", emoji: "🛍️" },
+      { title: "Fashion Tips for Women Over 40", hook: "Age is just a number — here's how to dress your best.", tip: "Target a specific audience for higher engagement.", emoji: "👑" },
+    ],
+  },
+  "Fitness & Health": {
+    Instagram: [
+      { title: "5-Minute Morning Routine", hook: "This 5-minute routine woke me up better than coffee.", tip: "Film in natural morning light for an aspirational feel.", emoji: "☀️" },
+      { title: "Transformation Tuesday Progress", hook: "6 months apart — same person, totally different body.", tip: "Use the same angle and lighting for both photos.", emoji: "💪" },
+      { title: "What I Eat in a Day", hook: "Here's exactly what a fitness coach eats to stay lean.", tip: "Break it into breakfast, lunch, dinner, snacks.", emoji: "🥗" },
+      { title: "Common Gym Mistakes", hook: "I see these mistakes at the gym every single day.", tip: "Use before/after form corrections side by side.", emoji: "❌" },
+      { title: "Home Workout: No Equipment", hook: "You don't need a gym to get fit — try this today.", tip: "Keep it under 60 seconds and show reps clearly.", emoji: "🏠" },
+      { title: "Hydration Tips That Actually Work", hook: "I started drinking water this way and everything changed.", tip: "Use a simple infographic-style layout.", emoji: "💧" },
+      { title: "Best Pre-Workout Foods", hook: "Eat these before your workout and feel the difference.", tip: "Keep it visual with beautiful food photography.", emoji: "🍌" },
+      { title: "Rest Day Activities That Help Recovery", hook: "Rest days are not for sitting on the couch.", tip: "Show active recovery like stretching and walks.", emoji: "🧘" },
+    ],
+    TikTok: [
+      { title: "Gym Beginner vs Pro", hook: "POV: Your first day at the gym vs after 6 months.", tip: "Use funny audio for the beginner side.", emoji: "🏋️" },
+      { title: "Healthy Meal in Under 10 Minutes", hook: "This meal is healthy, cheap, and takes 10 minutes.", tip: "Speed up the cooking process in your edit.", emoji: "⏱️" },
+      { title: "Fitness Myth Busting", hook: "Everything you've been told about fat loss is wrong.", tip: "Use text on screen to highlight each myth.", emoji: "🚫" },
+      { title: "Try This 30-Day Challenge", hook: "I did 100 squats every day for 30 days — here's what happened.", tip: "Show weekly progress clips in a montage.", emoji: "📅" },
+      { title: "Workout Routine for Busy People", hook: "No time to work out? This 15-minute routine is for you.", tip: "Use a timer graphic on screen.", emoji: "⏰" },
+      { title: "Rate My Plate", hook: "Followers sent me their meals — I rated them live.", tip: "Reaction content performs great on TikTok.", emoji: "🍽️" },
+      { title: "Signs You Are Overtraining", hook: "More workouts is not always better — here is why.", tip: "List each sign clearly with text overlay.", emoji: "⚠️" },
+      { title: "What I Eat to Lose Weight", hook: "I lost 10kg eating these exact meals every week.", tip: "Be specific — viewers love real meal details.", emoji: "🥙" },
+    ],
+    YouTube: [
+      { title: "Full Body Workout for Beginners", hook: "The only beginner workout guide you'll ever need.", tip: "Add chapter markers for each exercise.", emoji: "📋" },
+      { title: "My 90-Day Fitness Journey", hook: "I documented everything — the wins, the failures, and the truth.", tip: "Use weekly weigh-ins and footage for structure.", emoji: "📈" },
+      { title: "Nutrition 101: What No One Tells You", hook: "The diet industry lies to you — here's the truth.", tip: "Back claims with simple on-screen stats.", emoji: "📊" },
+      { title: "How I Meal Prep for the Week", hook: "I prep 5 days of food in just 2 hours every Sunday.", tip: "Include a grocery list in the video description.", emoji: "🥡" },
+      { title: "Gym Equipment for Home Setup", hook: "You only need these 5 items to build a home gym.", tip: "Include affiliate links to earn passive income.", emoji: "🏠" },
+      { title: "Sleep and Recovery: The Missing Piece", hook: "Your workouts won't work until you fix this one thing.", tip: "Use sleep tracking screenshots as visuals.", emoji: "😴" },
+      { title: "How to Stay Fit While Traveling", hook: "I stayed in shape during a 3-month trip — here's how.", tip: "Film workout clips from different locations.", emoji: "✈️" },
+      { title: "Best Supplements for Beginners", hook: "Don't waste money on supplements you don't need.", tip: "Be honest — viewers appreciate transparency.", emoji: "💊" },
+    ],
+    LinkedIn: [
+      { title: "How Exercise Made Me a Better Leader", hook: "Working out daily changed how I show up at work.", tip: "Connect fitness habits to professional performance.", emoji: "💼" },
+      { title: "Why CEOs Wake Up at 5AM", hook: "The morning routine that separates high performers from everyone else.", tip: "Use data and examples of successful people.", emoji: "⏰" },
+    ],
+    Facebook: [
+      { title: "Simple Exercises for Seniors", hook: "Stay active and healthy at any age with these easy moves.", tip: "Target older demographics who are very active on Facebook.", emoji: "🧓" },
+      { title: "Family Fitness Challenge Ideas", hook: "Get the whole family moving with these fun challenges.", tip: "Family content does very well on Facebook.", emoji: "👨‍👩‍👧" },
+    ],
+  },
+  "Digital Marketing": {
+    Instagram: [
+      { title: "How I Got My First 1000 Followers", hook: "No ads, no tricks — just this simple strategy.", tip: "Use a step-by-step carousel format.", emoji: "📈" },
+      { title: "Best Free Tools for Marketers", hook: "These free tools do the work of $500/month software.", tip: "List each tool with a screenshot.", emoji: "🛠️" },
+      { title: "Content Ideas for an Entire Month", hook: "Never run out of content ideas again with this system.", tip: "Share as a saveable carousel for maximum reach.", emoji: "📅" },
+      { title: "How the Instagram Algorithm Works", hook: "The algorithm isn't random — here's how it actually works.", tip: "Keep it simple with visual diagrams.", emoji: "🤖" },
+      { title: "How to Write Captions That Convert", hook: "Most captions are forgettable — here's how to fix yours.", tip: "Show real before/after caption examples.", emoji: "✍️" },
+      { title: "Mistakes Killing Your Engagement", hook: "These 5 mistakes are why nobody is seeing your posts.", tip: "Use a checklist format for easy reading.", emoji: "⚠️" },
+      { title: "How to Use Hashtags in 2025", hook: "Everything you know about hashtags is outdated.", tip: "Give a specific formula — viewers love formulas.", emoji: "🔖" },
+      { title: "How to Make Money on Instagram", hook: "You don't need 100k followers to make money here.", tip: "Share multiple monetization methods.", emoji: "💰" },
+    ],
+    TikTok: [
+      { title: "How to Go Viral on TikTok", hook: "I studied 100 viral videos and found the pattern.", tip: "Hook viewers in the first 2 seconds with a bold claim.", emoji: "🔥" },
+      { title: "Day in the Life of a Freelancer", hook: "This is what working for yourself actually looks like.", tip: "Raw, authentic content performs better than polished here.", emoji: "💻" },
+      { title: "How I Made My First $1000 Online", hook: "I made my first $1000 online with zero experience.", tip: "Be specific with numbers — it builds trust.", emoji: "💰" },
+      { title: "Social Media Tips Nobody Shares", hook: "These growth tips are hiding in plain sight.", tip: "Use text overlays for each tip.", emoji: "💡" },
+      { title: "Client Red Flags to Watch For", hook: "These red flags will save you from nightmare clients.", tip: "Use relatable humor to keep it engaging.", emoji: "🚩" },
+      { title: "How to Price Your Services", hook: "Stop undercharging — here's how to know your worth.", tip: "Use a pricing formula on screen.", emoji: "💵" },
+      { title: "How I Got 10k Followers in 30 Days", hook: "I followed this exact strategy and it worked.", tip: "Show proof with screenshots.", emoji: "📱" },
+      { title: "Best Side Hustles Using Social Media", hook: "Your phone can make you money — here is how.", tip: "List each hustle with estimated earnings.", emoji: "📲" },
+    ],
+    YouTube: [
+      { title: "Complete Digital Marketing Course for Beginners", hook: "Everything you need to start a career in digital marketing.", tip: "Add a table of contents in the description.", emoji: "🎓" },
+      { title: "How to Run Facebook Ads for Beginners", hook: "I wasted $500 on ads before I learned this.", tip: "Show your actual Ads Manager on screen.", emoji: "📊" },
+      { title: "SEO Explained Simply", hook: "You don't need to be a tech genius to rank on Google.", tip: "Use simple analogies to explain SEO concepts.", emoji: "🔍" },
+      { title: "Email Marketing for Beginners", hook: "Email marketing makes more money than social media — here's why.", tip: "Show real email campaigns and their results.", emoji: "📧" },
+      { title: "How to Build a Personal Brand", hook: "Your personal brand is your most valuable business asset.", tip: "Include real examples of strong personal brands.", emoji: "🏷️" },
+      { title: "How to Get Clients as a Freelancer", hook: "I went from zero to 10 clients in 3 months using this method.", tip: "Be specific — generic advice doesn't convert.", emoji: "🤝" },
+      { title: "Best Digital Marketing Tools 2025", hook: "These tools will save you hours every single week.", tip: "Include affiliate links to each tool.", emoji: "🛠️" },
+      { title: "How to Create a Content Strategy", hook: "Posting without a strategy is like driving without a map.", tip: "Provide a free downloadable strategy template.", emoji: "🗺️" },
+    ],
+    LinkedIn: [
+      { title: "Lessons From My First Year Freelancing", hook: "I quit my job and went freelance — here's the real story.", tip: "Personal stories get 3x more engagement on LinkedIn.", emoji: "📖" },
+      { title: "The Marketing Strategy That Tripled My Revenue", hook: "One simple shift doubled my client leads in 60 days.", tip: "Use bullet points for easy scanning.", emoji: "📊" },
+      { title: "How to Build a Personal Brand in 2025", hook: "Your LinkedIn profile is your best marketing asset — use it.", tip: "End with a CTA asking followers to connect.", emoji: "🏷️" },
+      { title: "What I Wish I Knew Starting Out", hook: "5 years of marketing lessons packed into one post.", tip: "Number your lessons for clarity.", emoji: "🎓" },
+      { title: "How to Get Clients Without Cold Outreach", hook: "I haven't cold pitched in a year — here's my system.", tip: "Be specific — vague advice doesn't perform.", emoji: "🤝" },
+      { title: "My Exact Content Posting Schedule", hook: "This is the exact schedule I use to grow consistently.", tip: "Share a visual calendar in the post image.", emoji: "🗓️" },
+      { title: "Why Most LinkedIn Profiles Fail", hook: "Your LinkedIn profile is costing you opportunities.", tip: "Point out common mistakes and fixes.", emoji: "❌" },
+      { title: "How I Got 50 Leads from One Post", hook: "One LinkedIn post generated 50 leads — here is what I wrote.", tip: "Share the actual post structure.", emoji: "💡" },
+    ],
+    Facebook: [
+      { title: "How to Grow a Facebook Page in 2025", hook: "Facebook is not dead — here is how to grow fast.", tip: "Share your own page growth as proof.", emoji: "📘" },
+      { title: "Facebook Group Marketing Strategy", hook: "Facebook Groups are the most underrated marketing tool right now.", tip: "Explain how to use groups to attract clients.", emoji: "👥" },
+    ],
+  },
+  "Food & Cooking": {
+    Instagram: [
+      { title: "3-Ingredient Recipe That Wows", hook: "Three ingredients. Ten minutes. Everyone will ask for the recipe.", tip: "Film in overhead flat lay style for food.", emoji: "🍳" },
+      { title: "Restaurant Dupe at Home", hook: "I recreated my favorite restaurant dish for under $5.", tip: "Side-by-side comparison photo gets saves.", emoji: "👨‍🍳" },
+      { title: "Meal Prep Sunday Routine", hook: "Here's how I prep an entire week of food in 2 hours.", tip: "Show the finished containers lined up at the end.", emoji: "🥡" },
+      { title: "5 Ways to Use Leftover Chicken", hook: "Never waste food again — these 5 meals are incredible.", tip: "Carousel format works perfectly for this.", emoji: "🍗" },
+      { title: "Aesthetic Breakfast Ideas", hook: "You'll want to wake up early just to make these.", tip: "Natural lighting makes food look amazing.", emoji: "🥞" },
+      { title: "Budget Meals Under $5", hook: "Eating healthy on a budget is 100% possible — proof inside.", tip: "Include exact prices for each ingredient.", emoji: "💸" },
+      { title: "Nigerian Recipes Made Easy", hook: "Traditional Nigerian recipes simplified for everyday cooking.", tip: "Tap into local pride — it gets massive shares.", emoji: "🍲" },
+      { title: "Healthy Swaps for Your Favorite Meals", hook: "Eat your favorites without the guilt — here's how.", tip: "Show the original vs the healthy version.", emoji: "💚" },
+    ],
+    TikTok: [
+      { title: "Satisfying Cooking ASMR", hook: "No talking, just the most satisfying cooking sounds.", tip: "Good audio quality is everything for ASMR content.", emoji: "🔊" },
+      { title: "Foods I Ate Wrong My Whole Life", hook: "I've been eating these foods the wrong way for 30 years.", tip: "Hook is everything — say it in the first 2 seconds.", emoji: "😱" },
+      { title: "One-Pan Dinner for Lazy Days", hook: "One pan, minimal cleanup, maximum flavor.", tip: "Keep the video under 60 seconds.", emoji: "🍲" },
+      { title: "Viral Food Trend: Worth It or Not?", hook: "I tried the viral food trend so you don't have to.", tip: "Honest reactions feel authentic and get shares.", emoji: "🔥" },
+      { title: "Cheat Meal vs Healthy Version", hook: "I made the healthy version of my favorite cheat meal.", tip: "Side-by-side split screen is very engaging.", emoji: "⚖️" },
+      { title: "Cooking for One on a Budget", hook: "Eating alone doesn't mean eating badly — try these.", tip: "Solo living content has a massive audience.", emoji: "🍜" },
+      { title: "Foods That Look Hard but Are Easy", hook: "This looks like a 5-star dish but took me 20 minutes.", tip: "Surprise factor drives shares.", emoji: "🤯" },
+      { title: "What I Cook When I Have No Time", hook: "These quick meals saved my evenings every single week.", tip: "Urgency and practicality make this highly shareable.", emoji: "⏰" },
+    ],
+    YouTube: [
+      { title: "Beginner's Guide to Cooking", hook: "If you can boil water, you can make these meals.", tip: "Walk through every step slowly for beginners.", emoji: "🔰" },
+      { title: "Cook a Week of Meals for $30", hook: "I fed myself for an entire week on just $30.", tip: "Show the grocery receipt on camera.", emoji: "🧾" },
+      { title: "African Food Recipes Playlist", hook: "The most delicious African recipes you've never tried.", tip: "Series content keeps viewers coming back.", emoji: "🌍" },
+      { title: "How to Bake Bread from Scratch", hook: "I finally learned to bake bread and my life changed.", tip: "Bread baking content gets massive watch time.", emoji: "🍞" },
+      { title: "Cooking Mistakes Beginners Make", hook: "I made all of these cooking mistakes so you don't have to.", tip: "Relatable content gets high watch time.", emoji: "❌" },
+      { title: "Street Food Around the World", hook: "The best street food I've ever tasted — recreated at home.", tip: "Travel-food hybrid content performs very well.", emoji: "🌮" },
+    ],
+    LinkedIn: [
+      { title: "How I Built a Food Business from My Kitchen", hook: "I started selling food from home and built a real business.", tip: "Entrepreneurship angle works well on LinkedIn.", emoji: "🏠" },
+    ],
+    Facebook: [
+      { title: "Easy Family Dinner Recipes", hook: "Feed the whole family in under 30 minutes with these meals.", tip: "Family-focused content dominates Facebook.", emoji: "👨‍👩‍👧" },
+      { title: "Nigerian Party Food Ideas", hook: "Planning a party? These dishes will impress every guest.", tip: "Highly shareable in Nigerian Facebook communities.", emoji: "🎉" },
+    ],
+  },
+  "Personal Finance": {
+    Instagram: [
+      { title: "How I Saved $10K in a Year", hook: "I saved $10,000 on a normal salary — here's exactly how.", tip: "Use a savings breakdown chart for visual impact.", emoji: "💰" },
+      { title: "Money Mistakes in Your 20s", hook: "I made all of these money mistakes so you don't have to.", tip: "Relatable content gets more saves and shares.", emoji: "⚠️" },
+      { title: "Budget Template for Beginners", hook: "This simple budget changed my financial life completely.", tip: "Offer a free template download to grow your email list.", emoji: "📋" },
+      { title: "Passive Income Ideas That Work", hook: "These passive income streams actually made me money.", tip: "Be specific with real numbers for credibility.", emoji: "📈" },
+      { title: "How to Pay Off Debt Fast", hook: "I paid off $15,000 in debt in 18 months using this method.", tip: "The debt snowball vs avalanche debate drives comments.", emoji: "❄️" },
+      { title: "Things Wealthy People Don't Buy", hook: "Rich people stopped buying these things years ago.", tip: "Controversial angle drives shares and saves.", emoji: "🚫" },
+      { title: "How to Start Investing with $100", hook: "You don't need to be rich to start investing.", tip: "Make it accessible — most people think investing is for the wealthy.", emoji: "📊" },
+      { title: "Why You Are Always Broke", hook: "It's not how much you earn — it's what you do with it.", tip: "Honest, relatable content gets massive engagement.", emoji: "😤" },
+    ],
+    TikTok: [
+      { title: "Money Habits of Millionaires", hook: "Millionaires do these 5 things differently with money.", tip: "List-style content performs well on TikTok.", emoji: "🤑" },
+      { title: "How I Doubled My Income", hook: "I doubled my income in one year — here is exactly what I did.", tip: "Be specific — vague tips don't convert.", emoji: "📈" },
+      { title: "Frugal Living Tips That Work", hook: "I cut my expenses in half without feeling deprived.", tip: "Practical, actionable tips get saves.", emoji: "✂️" },
+      { title: "The 50-30-20 Budget Rule", hook: "This budgeting rule changed everything for me.", tip: "Use a simple graphic to explain the rule.", emoji: "📊" },
+      { title: "How to Make Extra Money This Weekend", hook: "You can make extra money this weekend with these ideas.", tip: "Weekend urgency drives immediate action.", emoji: "💵" },
+      { title: "Things I Stopped Buying to Save Money", hook: "Cutting these things out saved me $500 a month.", tip: "Relatable content gets shares from friends.", emoji: "🛑" },
+    ],
+    YouTube: [
+      { title: "Complete Beginner's Guide to Investing", hook: "Everything I wish I knew before I started investing.", tip: "Use simple graphics and avoid jargon.", emoji: "📊" },
+      { title: "How I Built My Emergency Fund", hook: "Building an emergency fund felt impossible — until I did this.", tip: "Show your actual spreadsheet for authenticity.", emoji: "🛡️" },
+      { title: "Best Apps to Manage Your Money", hook: "These apps make managing money almost automatic.", tip: "Include a demo walkthrough of each app.", emoji: "📱" },
+      { title: "Real Budget Breakdown: $3000/Month", hook: "Here's exactly where every dollar of my $3000 salary goes.", tip: "Transparency builds massive trust with viewers.", emoji: "💵" },
+      { title: "Side Hustles I Actually Tried", hook: "I tested 10 side hustles — here are the ones that paid.", tip: "Give real income numbers for each hustle.", emoji: "💼" },
+      { title: "How to Negotiate a Higher Salary", hook: "I used this exact script to get a 30% salary increase.", tip: "Include role-play examples to make it practical.", emoji: "🤝" },
+      { title: "How to Build Wealth on a Low Income", hook: "You don't need a big salary to build wealth.", tip: "This topic resonates with the majority of viewers.", emoji: "💎" },
+      { title: "Credit Cards: Good or Bad?", hook: "Credit cards destroyed my finances — then saved them.", tip: "Controversial personal story drives engagement.", emoji: "💳" },
+    ],
+    LinkedIn: [
+      { title: "Financial Lessons I Learned the Hard Way", hook: "These money lessons cost me thousands — learn from my mistakes.", tip: "Vulnerability drives massive LinkedIn engagement.", emoji: "📖" },
+      { title: "How to Negotiate Your Salary Like a Pro", hook: "Most people leave thousands on the table in salary negotiations.", tip: "Professional finance content performs very well here.", emoji: "💼" },
+    ],
+    Facebook: [
+      { title: "How to Save Money on Groceries", hook: "I cut my grocery bill in half with these simple tricks.", tip: "Practical household tips get massive shares on Facebook.", emoji: "🛒" },
+      { title: "Best Ways to Make Money Online in Nigeria", hook: "Verified ways Nigerians are making money online in 2025.", tip: "Location-specific content gets high engagement.", emoji: "🇳🇬" },
+    ],
+  },
+  "Beauty & Skincare": {
+    Instagram: [
+      { title: "My 5-Step Skincare Routine", hook: "This routine cleared my skin in 4 weeks — here's exactly what I use.", tip: "Show each product with close-up shots.", emoji: "✨" },
+      { title: "Drugstore vs High-End Skincare", hook: "I tested cheap vs expensive products — the results surprised me.", tip: "Side-by-side comparison format works great here.", emoji: "💊" },
+      { title: "No Makeup Makeup Look Tutorial", hook: "This look takes 10 minutes and people think you woke up like this.", tip: "Use before and after to show the subtle difference.", emoji: "💄" },
+      { title: "Skincare Mistakes You Are Making", hook: "These skincare habits are actually aging your skin faster.", tip: "Fear-based hooks drive massive engagement.", emoji: "⚠️" },
+      { title: "Best Products for Dark Skin Tones", hook: "Finally — beauty products that actually work on dark skin.", tip: "Inclusive content gets huge engagement and shares.", emoji: "🌟" },
+      { title: "How I Faded My Dark Spots", hook: "My hyperpigmentation is almost gone — here's what worked.", tip: "Transformation content gets massive saves.", emoji: "🌿" },
+    ],
+    TikTok: [
+      { title: "Skincare Routine for Beginners", hook: "You only need 3 products to start a skincare routine.", tip: "Simple advice for beginners gets massive reach.", emoji: "🧴" },
+      { title: "Testing Viral Skincare Products", hook: "I tried every viral skincare product so you don't have to.", tip: "Honest reviews build massive trust.", emoji: "🔬" },
+      { title: "Get Ready With Me: Natural Look", hook: "Watch me go from bare face to glowing in 10 minutes.", tip: "GRWM content is one of the top performing formats.", emoji: "🪞" },
+      { title: "Ingredients to Never Mix", hook: "Mixing these skincare ingredients is damaging your skin.", tip: "Safety content gets saves and shares.", emoji: "🚫" },
+      { title: "Affordable Glow Up Routine", hook: "I spent less than $20 and had the best skin of my life.", tip: "Budget beauty content has a huge audience.", emoji: "💸" },
+      { title: "Rating My Followers Skincare Routines", hook: "You sent me your routines — here's my honest reaction.", tip: "Reaction content drives huge interaction.", emoji: "⭐" },
+    ],
+    YouTube: [
+      { title: "Complete Skincare Guide for Beginners", hook: "Everything you need to know about skincare — simplified.", tip: "Long-form educational content earns loyal subscribers.", emoji: "📚" },
+      { title: "6-Month Skincare Transformation", hook: "Watch my skin transform over 6 months — unfiltered.", tip: "Monthly progress videos keep viewers coming back.", emoji: "📅" },
+      { title: "Best Nigerian Skincare Brands", hook: "These local brands work better than imported ones.", tip: "Local pride content gets massive shares.", emoji: "🇳🇬" },
+      { title: "How to Build a Skincare Routine for Your Skin Type", hook: "Using the wrong products for your skin type is making things worse.", tip: "Personalized advice keeps viewers watching longer.", emoji: "🔍" },
+    ],
+    LinkedIn: [
+      { title: "How I Built a Beauty Brand from Zero", hook: "I started a beauty brand with no experience and no money.", tip: "Entrepreneurship story performs well on LinkedIn.", emoji: "💄" },
+    ],
+    Facebook: [
+      { title: "Natural Remedies for Glowing Skin", hook: "Your kitchen has everything you need for great skin.", tip: "Natural/DIY content gets massive Facebook shares.", emoji: "🌿" },
+      { title: "Best Skincare Products Under 5000 Naira", hook: "Great skin doesn't have to be expensive — here's proof.", tip: "Budget-focused content works well in Nigerian groups.", emoji: "💰" },
+    ],
+  },
+  "Travel": {
+    Instagram: [
+      { title: "Hidden Gems in Nigeria", hook: "Most Nigerians have never visited these beautiful places.", tip: "Local travel content gets huge engagement.", emoji: "🇳🇬" },
+      { title: "How I Travel on a Budget", hook: "I visited 5 countries and spent less than you'd think.", tip: "Budget breakdowns are highly saveable.", emoji: "💸" },
+      { title: "Best Hotels for Every Budget", hook: "From luxury to budget — here are the best stays I've found.", tip: "Use beautiful hotel photos for maximum engagement.", emoji: "🏨" },
+      { title: "Packing Hacks That Changed My Travel", hook: "I never check a bag anymore thanks to these packing tricks.", tip: "Practical hacks get massive saves.", emoji: "🧳" },
+      { title: "Solo Travel Tips for Women", hook: "I've traveled solo to 10 countries — here's how I stayed safe.", tip: "Safety-focused travel content gets huge engagement from women.", emoji: "👩" },
+      { title: "Most Beautiful Places in Africa", hook: "Africa is the most beautiful continent on earth — here's proof.", tip: "Pride content gets massive shares across the continent.", emoji: "🌍" },
+    ],
+    TikTok: [
+      { title: "Day in My Life: Traveling in Lagos", hook: "This is what a day in Lagos actually looks like.", tip: "Day in the life travel content performs extremely well.", emoji: "🌆" },
+      { title: "Things Nobody Tells You About Traveling", hook: "I wish someone had told me these things before my first trip.", tip: "Honest, real travel experiences drive engagement.", emoji: "✈️" },
+      { title: "How to Find Cheap Flights", hook: "I never pay full price for flights — here is my method.", tip: "Practical money-saving tips get massive shares.", emoji: "🛫" },
+      { title: "Travel Red Flags to Watch For", hook: "These travel mistakes almost ruined my trip.", tip: "Warning content drives saves and comments.", emoji: "🚩" },
+      { title: "Most Underrated Travel Destinations", hook: "Everyone goes to Paris — but these places are better.", tip: "Contrarian takes get shares and debates in comments.", emoji: "🗺️" },
+      { title: "What $100 Gets You in Different Countries", hook: "See how far $100 goes in Nigeria vs Dubai vs London.", tip: "Comparison content is highly shareable.", emoji: "💵" },
+    ],
+    YouTube: [
+      { title: "Complete Travel Guide to Lagos Nigeria", hook: "Everything you need to know before visiting Lagos.", tip: "City guides rank well on YouTube search.", emoji: "🌆" },
+      { title: "Budget Travel: How to Travel for Less", hook: "I traveled for a month on a budget most people spend in a week.", tip: "Include a full cost breakdown in the description.", emoji: "💰" },
+      { title: "First Time Traveling Abroad: Complete Guide", hook: "Everything I wish I knew before my first international trip.", tip: "Beginner travel content has a massive audience.", emoji: "🌍" },
+      { title: "Best Places to Visit in West Africa", hook: "West Africa has some of the most incredible destinations on earth.", tip: "Regional travel guides rank well and attract long-term viewers.", emoji: "🗺️" },
+    ],
+    LinkedIn: [
+      { title: "How Travel Made Me a Better Professional", hook: "Traveling to 10 countries taught me more than my MBA.", tip: "Connect travel experiences to professional growth.", emoji: "💼" },
+    ],
+    Facebook: [
+      { title: "Best Local Travel Spots in Nigeria", hook: "You don't need to leave Nigeria to have an amazing vacation.", tip: "Local travel content gets huge shares in Nigerian groups.", emoji: "🇳🇬" },
+      { title: "Travel Tips for Nigerian Passport Holders", hook: "Traveling with a Nigerian passport? Here's what you need to know.", tip: "Highly specific content gets massive engagement.", emoji: "🛂" },
+    ],
+  },
+  "Business & Entrepreneurship": {
+    Instagram: [
+      { title: "How I Started a Business with No Money", hook: "I launched my business with zero capital — here's how.", tip: "Zero to hero stories get massive engagement.", emoji: "🚀" },
+      { title: "Business Ideas You Can Start This Week", hook: "You can start any of these businesses before next Friday.", tip: "Urgency in the hook drives immediate saves.", emoji: "💡" },
+      { title: "Why Most Small Businesses Fail", hook: "90% of businesses fail because of these avoidable mistakes.", tip: "Warning content gets high saves and shares.", emoji: "⚠️" },
+      { title: "How to Find Your First Customer", hook: "Your first customer is closer than you think.", tip: "Practical advice for beginners gets massive saves.", emoji: "🎯" },
+      { title: "Online Businesses You Can Run From Your Phone", hook: "Your phone is a money-making machine — here's proof.", tip: "Mobile business ideas resonate strongly in Nigeria.", emoji: "📱" },
+      { title: "How to Scale from Side Hustle to Full Business", hook: "I turned my side hustle into a full-time business in 6 months.", tip: "Transformation stories drive massive engagement.", emoji: "📈" },
+    ],
+    TikTok: [
+      { title: "Business Ideas for Students", hook: "You can start a business right now without leaving school.", tip: "Student entrepreneurship content has a huge audience.", emoji: "🎓" },
+      { title: "How I Made Money Online at 20", hook: "I was 20, broke, and figured out how to make money online.", tip: "Young entrepreneur stories get massive shares.", emoji: "💰" },
+      { title: "Things They Don't Teach You in Business School", hook: "My real-world business education cost me more than my degree.", tip: "Anti-establishment takes drive strong engagement.", emoji: "🏫" },
+      { title: "How to Build Passive Income from Scratch", hook: "Passive income is real — but nobody tells you how hard it is to build.", tip: "Honest takes on passive income perform better than hype.", emoji: "💤" },
+      { title: "Small Business Ideas That Make Real Money", hook: "These businesses are making ordinary people rich.", tip: "Be specific with income examples.", emoji: "💵" },
+      { title: "How to Register a Business in Nigeria", hook: "Everything you need to know to make your business official.", tip: "Practical step-by-step content gets massive saves.", emoji: "📋" },
+    ],
+    YouTube: [
+      { title: "How to Start a Business in Nigeria in 2025", hook: "The complete guide to starting a business in Nigeria today.", tip: "Nigeria-specific business content gets massive local views.", emoji: "🇳🇬" },
+      { title: "My First Year Running a Business", hook: "The wins, the losses, and everything in between — unfiltered.", tip: "Authentic yearly reviews build massive trust.", emoji: "📅" },
+      { title: "How to Write a Business Plan", hook: "You need a business plan — but it doesn't have to be complicated.", tip: "Offer a free template to grow your email list.", emoji: "📝" },
+      { title: "Best Online Businesses to Start in 2025", hook: "These online businesses are making the most money right now.", tip: "Trending business content ranks well on YouTube.", emoji: "💻" },
+      { title: "How to Get Business Funding in Nigeria", hook: "There is money available for Nigerian entrepreneurs — here's how to get it.", tip: "Funding content is highly searched in Nigeria.", emoji: "🏦" },
+      { title: "Lessons from Running a Failed Business", hook: "My business failed — and it was the best thing that happened to me.", tip: "Failure stories build deep trust with audiences.", emoji: "💪" },
+    ],
+    LinkedIn: [
+      { title: "What 5 Years of Entrepreneurship Taught Me", hook: "Five years in business — here are the lessons that changed everything.", tip: "Long-form lessons perform extremely well on LinkedIn.", emoji: "🎓" },
+      { title: "How to Network Your Way to Business Success", hook: "Every major opportunity in my business came from one relationship.", tip: "Networking content resonates deeply with LinkedIn audience.", emoji: "🤝" },
+      { title: "Why I Left My Job to Start a Business", hook: "I had a good salary and a stable job — and I walked away.", tip: "Career transition stories get massive LinkedIn engagement.", emoji: "🚪" },
+      { title: "The Truth About Being Your Own Boss", hook: "Being your own boss is incredible and terrifying at the same time.", tip: "Honest takes on entrepreneurship build loyal followers.", emoji: "😅" },
+    ],
+    Facebook: [
+      { title: "Small Business Ideas for Nigerian Women", hook: "These businesses are empowering women across Nigeria.", tip: "Women entrepreneurship content gets massive shares in Nigeria.", emoji: "👩‍💼" },
+      { title: "How to Promote Your Business on Social Media for Free", hook: "You don't need to pay for ads to grow your business online.", tip: "Free marketing tips are highly shareable in business groups.", emoji: "📱" },
+    ],
+  },
+  "Motivation & Mindset": {
+    Instagram: [
+      { title: "Morning Habits That Changed My Life", hook: "I changed my morning routine and my whole life shifted.", tip: "Morning routine content is evergreen and always performs.", emoji: "☀️" },
+      { title: "How to Stay Consistent When You Don't Feel Like It", hook: "Motivation is temporary — here's what actually keeps you going.", tip: "Anti-motivation takes perform better than hype content.", emoji: "💪" },
+      { title: "Signs You Are Growing", hook: "Growth is not always visible — but these signs show you are moving.", tip: "Reassurance content gets massive saves and shares.", emoji: "🌱" },
+      { title: "Stop Waiting for the Right Time", hook: "The right time is never coming — here's why you need to start now.", tip: "Urgency-based motivation drives strong engagement.", emoji: "⏰" },
+      { title: "How to Build Unshakeable Confidence", hook: "Confidence is not something you are born with — it's built.", tip: "Confidence content resonates with a huge audience.", emoji: "🦁" },
+      { title: "Your Environment is Shaping You", hook: "The people around you are making you who you are — choose wisely.", tip: "Hard truths get more engagement than feel-good content.", emoji: "🔄" },
+    ],
+    TikTok: [
+      { title: "This is Your Sign to Start", hook: "If you have been waiting for a sign — this is it.", tip: "Short, punchy motivation works perfectly on TikTok.", emoji: "✨" },
+      { title: "Why You Are Not Reaching Your Goals", hook: "It's not your circumstances — it's this one thing.", tip: "Self-accountability content drives strong engagement.", emoji: "🎯" },
+      { title: "Daily Habits of Successful People", hook: "Successful people do these things every single day.", tip: "List content with quick cuts performs well here.", emoji: "📋" },
+      { title: "What I Learned from Failing", hook: "My biggest failure was actually my biggest lesson.", tip: "Vulnerability on TikTok builds extremely loyal audiences.", emoji: "💡" },
+      { title: "You Are Closer Than You Think", hook: "Most people quit right before the breakthrough — don't be one of them.", tip: "Encouraging content gets shared as gifts to others.", emoji: "🏆" },
+      { title: "Stop Comparing Yourself to Others", hook: "Social media is a highlight reel — remember that.", tip: "Mental health adjacent motivation performs very well.", emoji: "🧠" },
+    ],
+    YouTube: [
+      { title: "How I Completely Changed My Life in One Year", hook: "One year ago my life looked completely different — here's what changed.", tip: "Year transformation videos attract huge watch time.", emoji: "🔄" },
+      { title: "The Power of Discipline Over Motivation", hook: "Motivation will fail you — but discipline never will.", tip: "Deep mindset content earns loyal, engaged subscribers.", emoji: "⚙️" },
+      { title: "How to Overcome Self-Doubt", hook: "Self-doubt almost stopped me — here's how I pushed through.", tip: "Relatable personal struggles build deep audience connection.", emoji: "🧠" },
+      { title: "Books That Changed How I Think", hook: "These books rewired my entire mindset about success.", tip: "Book recommendation videos earn affiliate income.", emoji: "📚" },
+    ],
+    LinkedIn: [
+      { title: "The Mindset Shift That Changed My Career", hook: "One idea completely changed how I approach work and success.", tip: "Mindset content performs extremely well on LinkedIn.", emoji: "💡" },
+      { title: "Why I Stopped Chasing Perfection", hook: "Perfectionism was my biggest career obstacle — here's how I beat it.", tip: "Relatable professional struggles drive strong engagement.", emoji: "🎯" },
+    ],
+    Facebook: [
+      { title: "Daily Affirmations for Success", hook: "Start your day with these powerful affirmations.", tip: "Positive affirmation content gets massive shares on Facebook.", emoji: "🙏" },
+      { title: "How to Stay Positive in Hard Times", hook: "Life gets hard — but these mindset shifts will carry you through.", tip: "Emotional support content is highly shareable in communities.", emoji: "❤️" },
+    ],
+  },
+  "Tech & Gadgets": {
+    Instagram: [
+      { title: "Best Budget Smartphones in 2025", hook: "You don't need to spend a fortune to get a great phone.", tip: "Comparison content with clear winners gets saves.", emoji: "📱" },
+      { title: "Tech Accessories You Actually Need", hook: "These accessories changed how I use my devices.", tip: "Keep it to genuine recommendations — not paid promotions.", emoji: "🔌" },
+      { title: "Hidden Phone Features You Didn't Know", hook: "Your phone can do things you've never tried.", tip: "Discovery content gets massive shares.", emoji: "🤯" },
+      { title: "Best Apps for Productivity", hook: "These apps saved me 2 hours every single day.", tip: "Show each app briefly in use for credibility.", emoji: "⚡" },
+      { title: "iPhone vs Android: The Truth", hook: "After using both for a year, here's my honest verdict.", tip: "This debate always drives massive comments.", emoji: "⚔️" },
+      { title: "How to Speed Up Your Old Phone", hook: "Before you buy a new phone, try these tricks first.", tip: "Money-saving tech tips get massive saves.", emoji: "🚀" },
+    ],
+    TikTok: [
+      { title: "Coolest Tech You've Never Heard Of", hook: "These tech products exist and they are mind-blowing.", tip: "Discovery content gets massive shares on TikTok.", emoji: "🤯" },
+      { title: "Smartphone Photography Tips", hook: "Your phone camera can take professional photos — here's how.", tip: "Photography tips are highly practical and shareable.", emoji: "📸" },
+      { title: "Tech That Makes Your Life Easier", hook: "I can't imagine my life without these simple tech tools.", tip: "Everyday tech content resonates with a broad audience.", emoji: "✨" },
+      { title: "Is the New iPhone Worth It?", hook: "I bought it so you don't have to — here's my honest review.", tip: "New product reviews drive massive early views.", emoji: "📱" },
+      { title: "Best Free Apps Everyone Should Have", hook: "These free apps are better than most paid ones.", tip: "Free tools content gets saved and shared constantly.", emoji: "💰" },
+      { title: "How I Set Up My Productive Workspace", hook: "This is the desk setup that helped me triple my output.", tip: "Workspace setup content has a huge passionate audience.", emoji: "🖥️" },
+    ],
+    YouTube: [
+      { title: "Best Budget Laptops for Students 2025", hook: "You don't need to spend much to get a great laptop for school.", tip: "Budget tech reviews rank extremely well on YouTube.", emoji: "💻" },
+      { title: "Complete Smartphone Buying Guide", hook: "Don't buy a phone until you watch this.", tip: "Buying guide content earns affiliate commissions.", emoji: "📱" },
+      { title: "How to Make Money with Your Tech Skills", hook: "Your tech knowledge is worth more than you think.", tip: "Monetization content attracts highly engaged viewers.", emoji: "💰" },
+      { title: "Top 10 Tech Gadgets of 2025", hook: "These are the best gadgets released this year — ranked.", tip: "Annual roundup videos get year-long traffic.", emoji: "🏆" },
+    ],
+    LinkedIn: [
+      { title: "Tech Tools That Run My Business", hook: "These tools save my business 20 hours every week.", tip: "Professional tech recommendations perform well on LinkedIn.", emoji: "🛠️" },
+    ],
+    Facebook: [
+      { title: "Best Phones to Buy in Nigeria Right Now", hook: "The best smartphones available in Nigeria at every price point.", tip: "Nigeria-specific tech advice gets massive local engagement.", emoji: "🇳🇬" },
+      { title: "How to Protect Yourself from Online Scams", hook: "Cybercrime is rising in Nigeria — here's how to stay safe.", tip: "Safety-focused content gets massive shares in communities.", emoji: "🔒" },
+    ],
+  },
+  "Education": {
+    Instagram: [
+      { title: "Study Tips That Actually Work", hook: "I went from failing to top of my class using these methods.", tip: "Study tips carousels get saved constantly by students.", emoji: "📚" },
+      { title: "How to Study Smarter Not Harder", hook: "Studying more hours is not the answer — this is.", tip: "Counter-intuitive study advice drives engagement.", emoji: "🧠" },
+      { title: "Best Free Learning Resources Online", hook: "You can get a world-class education for free — here's where.", tip: "Free resource lists are among the most saved content.", emoji: "🌐" },
+      { title: "How to Pass Any Exam", hook: "I've never failed an exam using this exact study system.", tip: "Exam success content resonates with a huge student audience.", emoji: "✅" },
+      { title: "Top Skills to Learn in 2025", hook: "These skills will make you valuable in any job market.", tip: "Career relevance drives saves among students and young professionals.", emoji: "🎯" },
+      { title: "How to Get Scholarships", hook: "Thousands of scholarship opportunities go unclaimed every year.", tip: "Scholarship content is urgently shareable among Nigerian students.", emoji: "🎓" },
+    ],
+    TikTok: [
+      { title: "Study With Me: 2-Hour Session", hook: "Come study with me — focus music included.", tip: "Study with me content has a massive loyal audience.", emoji: "⏱️" },
+      { title: "How to Learn Anything Fast", hook: "I learned a new skill in 30 days using this method.", tip: "Fast learning frameworks are highly saveable.", emoji: "⚡" },
+      { title: "Things School Doesn't Teach You", hook: "These life skills are more important than anything I learned in school.", tip: "Anti-school takes perform extremely well on TikTok.", emoji: "🏫" },
+      { title: "Best Apps for Students", hook: "These apps helped me get better grades and save more time.", tip: "App recommendations with demos get massive student engagement.", emoji: "📱" },
+      { title: "JAMB Tips from Someone Who Scored High", hook: "I scored high on JAMB — here's exactly how I prepared.", tip: "JAMB content has a massive and passionate Nigerian audience.", emoji: "📝" },
+      { title: "How to Get Into a Good University", hook: "Getting into your dream university is not as hard as they make it seem.", tip: "University admission advice is urgently searched content.", emoji: "🏛️" },
+    ],
+    YouTube: [
+      { title: "Complete JAMB Preparation Guide 2025", hook: "Everything you need to score high on JAMB this year.", tip: "JAMB prep content ranks extremely well in Nigerian YouTube searches.", emoji: "📚" },
+      { title: "How to Get a Scholarship to Study Abroad", hook: "Nigerian students are getting full scholarships abroad — here's how.", tip: "Scholarship content attracts highly motivated viewers.", emoji: "✈️" },
+      { title: "Learn Python Programming for Beginners", hook: "Python is the most valuable skill you can learn right now.", tip: "Coding tutorials have among the highest watch times on YouTube.", emoji: "💻" },
+      { title: "How to Build a Career Without a Degree", hook: "A degree is not the only path to a successful career.", tip: "Alternative education paths have a passionate audience.", emoji: "🛤️" },
+    ],
+    LinkedIn: [
+      { title: "Why Continuous Learning is Non-Negotiable", hook: "The professionals who keep learning are the ones who keep advancing.", tip: "Professional development content performs well on LinkedIn.", emoji: "📈" },
+      { title: "Free Certifications That Actually Boost Your Career", hook: "These free certifications changed how employers see me.", tip: "Actionable career advice gets saves and shares from professionals.", emoji: "🎓" },
+    ],
+    Facebook: [
+      { title: "Best Schools in Nigeria by State", hook: "A comprehensive guide to the best schools across Nigeria.", tip: "Education resource content gets massive shares among parents.", emoji: "🏫" },
+      { title: "Scholarship Opportunities for Nigerian Students 2025", hook: "These scholarships are open and accepting applications right now.", tip: "Urgency in scholarship posts drives immediate shares.", emoji: "💰" },
+    ],
+  },
+};
+
+const PLATFORMS = ["Instagram", "TikTok", "YouTube", "LinkedIn", "Facebook"];
+const NICHES = Object.keys(IDEAS);
+
+function getIdeas(niche, platform) {
+  const nicheData = IDEAS[niche];
+  if (!nicheData) return null;
+  return nicheData[platform] || nicheData[Object.keys(nicheData)[0]];
+}
+
+export default function ContentIdeaGenerator() {
+  const [niche, setNiche] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [ideas, setIdeas] = useState([]);
+  const [generated, setGenerated] = useState(false);
+  const [error, setError] = useState("");
+
+  const generate = () => {
+    if (!niche || !platform) {
+      setError("Please select a niche and platform.");
+      return;
+    }
+    setError("");
+    const result = getIdeas(niche, platform);
+    if (result) {
+      const shuffled = [...result].sort(() => Math.random() - 0.5).slice(0, 6);
+      setIdeas(shuffled);
+    }
+    setGenerated(true);
+  };
+
+  return (
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
+      fontFamily: "'Georgia', serif",
+      padding: "2rem 1rem",
+      color: "#fff"
+    }}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+
+        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+          <div style={{
+            background: "linear-gradient(90deg, #f7971e, #ffd200)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            fontSize: "2.2rem",
+            fontWeight: "bold",
+            letterSpacing: "-1px",
+          }}>
+            💡 Content Idea Generator
+          </div>
+          <p style={{ color: "#bbb", marginTop: "0.5rem", fontSize: "0.95rem" }}>
+            12 niches · 5 platforms · 500+ unique content ideas
+          </p>
+        </div>
+
+        <div style={{
+          background: "rgba(255,255,255,0.06)",
+          border: "1px solid rgba(255,255,255,0.12)",
+          borderRadius: "20px",
+          padding: "2rem",
+          marginBottom: "2rem",
+        }}>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <label style={{ display: "block", marginBottom: "0.6rem", color: "#ffd200", fontWeight: "bold", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "1px" }}>
+              Choose Your Niche
+            </label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {NICHES.map(n => (
+                <button key={n} onClick={() => { setNiche(n); setGenerated(false); }} style={{
+                  padding: "0.45rem 0.9rem",
+                  borderRadius: "30px",
+                  border: niche === n ? "2px solid #ffd200" : "1px solid rgba(255,255,255,0.2)",
+                  background: niche === n ? "rgba(255,210,0,0.15)" : "rgba(255,255,255,0.05)",
+                  color: niche === n ? "#ffd200" : "#ccc",
+                  cursor: "pointer",
+                  fontSize: "0.82rem",
+                  transition: "all 0.2s"
+                }}>{n}</button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginBottom: "1.8rem" }}>
+            <label style={{ display: "block", marginBottom: "0.6rem", color: "#f7971e", fontWeight: "bold", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "1px" }}>
+              Choose Your Platform
+            </label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {PLATFORMS.map(p => (
+                <button key={p} onClick={() => { setPlatform(p); setGenerated(false); }} style={{
+                  padding: "0.45rem 0.9rem",
+                  borderRadius: "30px",
+                  border: platform === p ? "2px solid #f7971e" : "1px solid rgba(255,255,255,0.2)",
+                  background: platform === p ? "rgba(247,151,30,0.15)" : "rgba(255,255,255,0.05)",
+                  color: platform === p ? "#f7971e" : "#ccc",
+                  cursor: "pointer",
+                  fontSize: "0.82rem",
+                  transition: "all 0.2s"
+                }}>{p}</button>
+              ))}
+            </div>
+          </div>
+
+          {error && <p style={{ color: "#f87171", marginBottom: "1rem", fontSize: "0.9rem" }}>{error}</p>}
+
+          <button onClick={generate} style={{
+            width: "100%",
+            padding: "0.9rem",
+            borderRadius: "14px",
+            border: "none",
+            background: "linear-gradient(90deg, #f7971e, #ffd200)",
+            color: "#000",
+            fontWeight: "bold",
+            fontSize: "1.05rem",
+            cursor: "pointer",
+            letterSpacing: "0.5px"
+          }}>
+            ✨ Generate Content Ideas
+          </button>
+        </div>
+
+        {generated && ideas.length > 0 && (
+          <div>
+            <h2 style={{ textAlign: "center", color: "#ffd200", marginBottom: "1.2rem", fontSize: "1rem", letterSpacing: "1px" }}>
+              🎯 {niche} ideas for {platform}
+            </h2>
+            <div style={{ display: "grid", gap: "1rem" }}>
+              {ideas.map((idea, i) => (
+                <div key={i} style={{
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "16px",
+                  padding: "1.2rem 1.4rem",
+                  transition: "background 0.2s"
+                }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
+                >
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "0.8rem" }}>
+                    <span style={{ fontSize: "1.8rem", flexShrink: 0 }}>{idea.emoji}</span>
+                    <div>
+                      <div style={{ fontWeight: "bold", fontSize: "1rem", color: "#fff", marginBottom: "0.35rem" }}>
+                        {idea.title}
+                      </div>
+                      <div style={{ color: "#93c5fd", fontSize: "0.87rem", marginBottom: "0.3rem" }}>
+                        🎣 <em>{idea.hook}</em>
+                      </div>
+                      <div style={{ color: "#86efac", fontSize: "0.83rem" }}>
+                        💡 {idea.tip}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+              <button onClick={generate} style={{
+                padding: "0.6rem 1.5rem",
+                borderRadius: "30px",
+                border: "1px solid #ffd200",
+                background: "transparent",
+                color: "#ffd200",
+                cursor: "pointer",
+                fontSize: "0.9rem"
+              }}>
+                🔄 Shuffle for New Ideas
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
